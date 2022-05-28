@@ -1,1 +1,27 @@
 name: Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Select the environment
+        default: master
+        required: true
+        type: string
+      application_version:
+        description: Provide the version
+        required: true
+        type: string
+        
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: [self-hosted, Standard]
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+     - name: checkout
+       uses: actions/checkout@2.4.1
+       
+     - name: Install utilities
+       run: |
+          apt update
+          apt install -y zip
