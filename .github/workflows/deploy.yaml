@@ -25,3 +25,34 @@ jobs:
        run: |
           apt update
           apt install -y zip
+          
+     - name: Echo
+       shell: bash
+       run: echo ${{ github.event.inputs.application_version }}
+     - uses: jfrog/setup-jfrog-cli@v2
+     - env:
+          #Uses Org level secret Artifactory Auth Token for System-Team-Automation
+          #  Note:  If your team would like to use your own Bot account the secret should be changed
+          JF_ENV_1: ${{ secrets.JF_RT_ARTIFACTORY_CLOUD }}
+     - run: |
+         jf -v
+         jf c s
+         jf rt ping
+         
+     - name: Download through JFrog CLI 
+       run: |
+          jf rt dl vcd-octopus-deploy/VSMB.Utility.Octopus.${{ github.event.inputs.application_version }}.nupkg && ls && pwd
+          
+     - name: Unzip
+        run |
+          unzip VSMB.Utility.Octopus..${{ github.event.inputs.application_version }}.nupkg && ls
+          
+     - name: Create Service Folders with Permission
+       uses: aws-actions/configure-aws-credentials@v1
+       with: 
+          role-to-assume: arn:aws:iam::409148389496:role/vtx-GitHubActions
+          aws-region: us-east-1
+          role-external-id: ${{ secrets.ORG_RUNNER_AWS_EXTERNALID }}
+          role-skip-session-tagging: true
+          
+     
