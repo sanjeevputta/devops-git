@@ -18,10 +18,8 @@ jobs:
       - name: Deploy to Server 1
         uses: easingthemes/ssh-deploy@v2.2.11
         env:
-         SSH_PRIVATE_KEY: ${ { secrets.EC2_SSH_KEY }}
-         ARGS: "-rltgoDzvO"
-         SOURCE: "dist/"
-         REMOTE_HOST: ${ { secrets.HOST_DNS }}
-         REMOTE_USER: ${ { secrets.USERNAME }}
-         TARGET: ${ { secrets.TARGET_DIR }}
+         SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+         REMOTE_HOST: ${{ secrets.HOST_DNS }}
+         REMOTE_USER: ${{ secrets.USERNAME }}
+         TARGET: ${{ secrets.TARGET_DIR }}
          
